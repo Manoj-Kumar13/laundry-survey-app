@@ -14,7 +14,11 @@ import {
 } from "antd";
 import { ReloadOutlined, UploadOutlined } from "@ant-design/icons";
 import { supabase } from "@/lib/supabaseClient";
-import { CATEGORY_OPTIONS, ENTRIES_TABLE_NAME, STORAGE_BUCKET_NAME } from "@/src/utils/constants";
+import {
+  CATEGORY_OPTIONS,
+  ENTRIES_TABLE_NAME,
+  STORAGE_BUCKET_NAME,
+} from "@/src/utils/constants";
 
 const { Option } = Select;
 
@@ -22,21 +26,52 @@ const fetchGeolocation = (
   onSuccess: (location: string) => void,
   onError: (error: string) => void
 ) => {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const { latitude, longitude } = position.coords;
-        const mapsLink = `https://www.google.com/maps?q=${latitude},${longitude}`;
-        onSuccess(mapsLink);
-      },
-      (error) => {
-        onError(error.message);
-      }
-    );
-  } else {
+  if (!navigator.geolocation) {
     onError("Geolocation is not supported by your browser.");
+    return;
   }
+
+  navigator.geolocation.getCurrentPosition(
+    (position) => {
+      const { latitude, longitude } = position.coords;
+      const mapsLink = `https://www.google.com/maps?q=${latitude},${longitude}`;
+      onSuccess(mapsLink);
+    },
+    (error) => {
+      let message = "Unable to fetch location.";
+      switch (error.code) {
+        case error.PERMISSION_DENIED:
+          message =
+            "Location permission denied. Please allow access in your browser or device settings.";
+          break;
+        case error.POSITION_UNAVAILABLE:
+          message =
+            "Location information is unavailable. Try again or check your network.";
+          break;
+        case error.TIMEOUT:
+          message =
+            "Location request timed out. Please try again.";
+          break;
+        default:
+          message = `An unknown error occurred: ${error.message}`;
+      }
+
+      // Special case for iOS Safari
+      if (/iPhone|iPad|iPod/.test(navigator.userAgent)) {
+        message +=
+          " On iOS devices, make sure the location access is enabled in Settings > Privacy & Security > Location Services";
+      }
+      
+      onError(message);
+    },
+    {
+      enableHighAccuracy: true,
+      timeout: 10000,
+      maximumAge: 0,
+    }
+  );
 };
+
 
 const CategoryField: React.FC<{
   category: string;
@@ -161,6 +196,7 @@ export default function DataEntryPage() {
         current_laundry: values.currentLaundry || "",
         lead: values.lead === "Yes",
         lead_detail: values.leadDetail || "",
+        created_by: values.createdBy,
       };
 
       const { error } = await supabase
@@ -311,6 +347,16 @@ export default function DataEntryPage() {
               ]}
             >
               <Input.TextArea rows={3} placeholder="Provide lead details" />
+            </Form.Item>
+          </Col>
+
+          <Col xs={24} md={12}>
+            <Form.Item
+              label="Name of Surveyor"
+              name="createdBy"
+              rules={[{ required: true, message: "This field is required" }]}
+            >
+              <Input placeholder="Enter your name" />
             </Form.Item>
           </Col>
 

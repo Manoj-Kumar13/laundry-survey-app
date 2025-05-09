@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { MenuFoldOutlined, MenuUnfoldOutlined, FormOutlined, BarChartOutlined } from '@ant-design/icons';
@@ -21,6 +21,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
+
+  useEffect(() => {
+    const isMobile = window.innerWidth < 500;
+    setCollapsed(isMobile);
+  }, []);
 
   const getMenuKey = () => {
     if (pathname.startsWith('/data-entry')) return '1';
@@ -59,22 +64,23 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body>
-        <Layout style={{ minHeight: '100vh' }}>
+        <Layout style={{ minHeight: "100vh" }}>
           <Sider trigger={null} collapsible collapsed={collapsed}>
             {/* 👇 Logo & App Title */}
             <div
               style={{
                 height: 64,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: collapsed ? 'center' : 'flex-start',
-                padding: '0 16px',
-                fontSize: collapsed ? '1.5rem' : '1.25rem',
-                fontWeight: 'bold',
-                color: '#fff',
+                display: "flex",
+                alignItems: "center",
+                justifyContent: collapsed ? "center" : "flex-start",
+                padding: "0 16px",
+                fontSize: collapsed ? "1.5rem" : "1.25rem",
+                fontWeight: "bold",
+                color: "#fff",
               }}
             >
-              🧺{!collapsed && <span style={{ marginLeft: 10 }}>LaundryApp</span>}
+              🧺
+              {!collapsed && <span style={{ marginLeft: 10 }}>LaundryApp</span>}
             </div>
 
             <Menu
@@ -83,61 +89,48 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               selectedKeys={[getMenuKey()]}
               items={[
                 {
-                  key: '1',
+                  key: "1",
                   icon: <FormOutlined />,
                   label: <Link href="/data-entry">Data Entry</Link>,
                 },
                 {
-                  key: '2',
+                  key: "2",
                   icon: <BarChartOutlined />,
-                  label: <span style={{ color: 'gray' }}>Dashboard</span>,
+                  label: <span style={{ color: "gray" }}>Dashboard</span>,
                   disabled: true,
                 },
               ]}
             />
 
-            {/* Export Button in Sidebar */}
-            <div
-              style={{
-                position: 'absolute',
-                bottom: 16,
-                left: 16,
-                right: 16,
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-              }}
-            >
-              <Button
-                onClick={exportExcel}
-                type="primary"
-                style={{
-                  marginTop: 16,
-                  width: '100%',
-                }}
-              >
-                Export Excel
-              </Button>
-            </div>
           </Sider>
 
           <Layout>
-            <Header style={{ padding: 0, background: colorBgContainer }}>
+            <Header
+              style={{
+                padding: "0 24px",
+                background: colorBgContainer,
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
               <Button
                 type="text"
                 icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
                 onClick={() => setCollapsed(!collapsed)}
                 style={{
-                  fontSize: '16px',
-                  width: 64,
-                  height: 64,
+                  fontSize: "16px",
                 }}
               />
+
+              <Button type="primary" onClick={exportExcel}>
+                Export Excel
+              </Button>
             </Header>
 
             <Content
               style={{
-                margin: '24px 16px',
+                margin: "24px 16px",
                 padding: 24,
                 minHeight: 280,
                 background: colorBgContainer,
