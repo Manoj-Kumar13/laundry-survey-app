@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.49.4",
+    "ag-grid-community": "^33.3.0",
+    "ag-grid-react": "^33.3.0",
     "antd": "^5.24.9",
     "bootstrap": "^5.3.5",
     "next": "15.3.1",

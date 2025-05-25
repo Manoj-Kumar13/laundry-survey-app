@@ -16,8 +16,8 @@ export default function Home() {
             Data Entry
           </Button>
         </Link>
-        <Button type="default" size="large" disabled>
-          Dashboard (Coming Soon)
+        <Button type="default" size="large">
+          Dashboard
         </Button>
       </div>
     </div>
