@@ -1,4 +1,6 @@
 @import 'bootstrap/dist/css/bootstrap.min.css';
+@import 'ag-grid-community/styles/ag-theme-alpine.css';
+
 
 * {
   padding: 0;

@@ -16,6 +16,9 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "antd/dist/reset.css";
 import "./globals.css";
 import { ENTRIES_TABLE_NAME } from "../utils/constants";
+import { ModuleRegistry, AllCommunityModule } from 'ag-grid-community';
+
+ModuleRegistry.registerModules([AllCommunityModule]);
 
 const { Header, Sider, Content } = Layout;
 
@@ -105,8 +108,12 @@ export default function RootLayout({
                 {
                   key: "2",
                   icon: <BarChartOutlined />,
-                  label: <span className="text-secondary">Dashboard</span>,
-                  disabled: true,
+                  label:<Link
+                      href="/dashboard"
+                      className="text-decoration-none text-white"
+                    >
+                      Dashboard
+                    </Link>
                 },
               ]}
             />
