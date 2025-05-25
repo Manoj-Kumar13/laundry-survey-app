@@ -79,15 +79,19 @@ export default function RootLayout({
       <body>
         <Layout style={{ minHeight: "100vh" }}>
           <Sider trigger={null} collapsible collapsed={collapsed}>
-            <div
-              className={`d-flex align-items-center ${
-                collapsed ? "justify-content-center" : "justify-content-start"
-              } px-3 text-white fw-bold`}
-              style={{ height: 64, fontSize: collapsed ? "1.5rem" : "1.25rem" }}
-            >
-              🧺 {!collapsed && <span className="ms-2">LaundryApp</span>}
-            </div>
-
+            <Link href="/" className="text-decoration-none">
+              <div
+                className={`d-flex align-items-center ${
+                  collapsed ? "justify-content-center" : "justify-content-start"
+                } px-3 text-white fw-bold`}
+                style={{
+                  height: 64,
+                  fontSize: collapsed ? "1.5rem" : "1.25rem",
+                }}
+              >
+                🧺 {!collapsed && <span className="ms-2">LaundryApp</span>}
+              </div>
+            </Link>
             <Menu
               theme="dark"
               mode="inline"
@@ -108,12 +112,14 @@ export default function RootLayout({
                 {
                   key: "2",
                   icon: <BarChartOutlined />,
-                  label:<Link
+                  label: (
+                    <Link
                       href="/dashboard"
                       className="text-decoration-none text-white"
                     >
                       Dashboard
                     </Link>
+                  ),
                 },
               ]}
             />

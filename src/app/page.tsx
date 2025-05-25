@@ -16,9 +16,11 @@ export default function Home() {
             Data Entry
           </Button>
         </Link>
+        <Link href="/dashboard">
         <Button type="default" size="large">
           Dashboard
         </Button>
+        </Link>
       </div>
     </div>
   );
